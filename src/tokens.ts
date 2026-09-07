@@ -1,6 +1,6 @@
-export const DEFAULT_TOKEN_BUDGET = 4000;
+export { DEFAULT_TOKEN_BUDGET } from "./config.js";
 
-const CJK_CHAR = /^[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]$/u;
+const CJK_CHAR = /^[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]$/u;
 
 export function estimateTokens(text: string): number {
   if (text === "") return 0;

@@ -3,6 +3,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
+import { MAX_BOUND } from "../src/config.ts";
 import { loadSkillMd, MAX_BOUND_SKILLS, rank, tokenize, type SkillRecord } from "../src/ranker.ts";
 
 const fixturesRoot = path.join(
@@ -28,6 +29,12 @@ test("tokenize splits ascii words and cjk overlapping bigrams", () => {
   assert.deepEqual(tokenize("中"), ["中"]);
 });
 
+test("tokenize splits Hangul overlapping bigrams like other CJK", () => {
+  assert.deepEqual(tokenize("한글라우팅"), ["한글", "글라", "라우", "우팅"]);
+  assert.deepEqual(tokenize("한"), ["한"]);
+  assert.deepEqual(tokenize("한글 라우팅"), ["한글", "라우", "우팅"]);
+});
+
 test("golden: login 500 error -> login-fix", () => {
   const ranked = rank(loadCatalog(), "login 500 error");
   assert.deepEqual(
@@ -48,6 +55,14 @@ test("golden: 路由 技能 -> 中文路由", () => {
   assert.deepEqual(
     ranked.skills.map((s) => s.name),
     ["中文路由"],
+  );
+});
+
+test("golden: 한글 라우팅 -> 한글라우팅", () => {
+  const ranked = rank(loadCatalog(), "한글 라우팅");
+  assert.deepEqual(
+    ranked.skills.map((s) => s.name),
+    ["한글라우팅"],
   );
 });
 
@@ -78,6 +93,11 @@ test("golden: overlap token shared caps at three with overlap-delta overflow", (
   assert.equal(ranked.none, false);
 });
 
+test("ranker cap is the same hard max as bind", () => {
+  assert.equal(MAX_BOUND_SKILLS, MAX_BOUND);
+  assert.equal(MAX_BOUND, 3);
+});
+
 test("four overlapping skills cap at MAX_BOUND_SKILLS", () => {
   const catalog: SkillRecord[] = ["delta", "alpha", "charlie", "bravo"].map((name) => ({
     name,
@@ -87,7 +107,8 @@ test("four overlapping skills cap at MAX_BOUND_SKILLS", () => {
   }));
   const ranked = rank(catalog, "overlap token shared");
   assert.equal(ranked.skills.length, MAX_BOUND_SKILLS);
-  assert.equal(MAX_BOUND_SKILLS, 3);
+  assert.equal(MAX_BOUND_SKILLS, MAX_BOUND);
+  assert.equal(MAX_BOUND, 3);
   assert.deepEqual(
     ranked.skills.map((s) => s.name),
     ["alpha", "bravo", "charlie"],
