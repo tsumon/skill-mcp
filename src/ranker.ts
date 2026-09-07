@@ -1,4 +1,5 @@
 import path from "node:path";
+import { MAX_BOUND } from "./config.js";
 
 const WEIGHTS = {
   name: 3,
@@ -7,10 +8,10 @@ const WEIGHTS = {
 } as const;
 
 const SCORE_THRESHOLD = 0.15;
-export const MAX_BOUND_SKILLS = 3;
+export const MAX_BOUND_SKILLS = MAX_BOUND;
 
 const ASCII_TOKEN = /[a-z0-9]+/g;
-const CJK_RUN = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]+/gu;
+const CJK_RUN = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]+/gu;
 
 export type SkillRecord = {
   name: string;

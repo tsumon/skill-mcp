@@ -3,7 +3,8 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { applyBudget, estimateTokens, skippedByBudget } from "../src/tokens.ts";
+import { DEFAULT_TOKEN_BUDGET as CONFIG_TOKEN_BUDGET } from "../src/config.ts";
+import { applyBudget, DEFAULT_TOKEN_BUDGET, estimateTokens, skippedByBudget } from "../src/tokens.ts";
 
 const loginFix = readFileSync(
   path.join(
@@ -16,6 +17,11 @@ const loginFix = readFileSync(
   ),
   "utf8",
 );
+
+test("default token budget is the config default and does not raise the cap", () => {
+  assert.equal(DEFAULT_TOKEN_BUDGET, CONFIG_TOKEN_BUDGET);
+  assert.equal(DEFAULT_TOKEN_BUDGET, 4000);
+});
 
 test("estimateTokens: empty string is 0, four chars is 1", () => {
   assert.equal(estimateTokens(""), 0);
@@ -31,6 +37,11 @@ test("estimateTokens: ASCII-only login-fix stays ceil(length/4) = 36", () => {
 test("estimateTokens: CJK is one token per code point; mixed adds ceil(nonCjk/4)", () => {
   assert.equal(estimateTokens("中文"), 2);
   assert.equal(estimateTokens("ab中"), 2);
+});
+
+test("estimateTokens: Hangul is one token per code point like Han", () => {
+  assert.equal(estimateTokens("한글"), 2);
+  assert.equal(estimateTokens("ab한"), 2);
 });
 
 test("applyBudget skips an over-budget middle skill and keeps a later smaller one", () => {

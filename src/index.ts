@@ -62,7 +62,7 @@ const TOOLS = [
   },
   {
     name: "doctor",
-    description: "Check skill roots exist, counts, shadowed, and binding path.",
+    description: "Dry-run only: check skill roots exist, counts, shadowed, and binding path. Never mutates.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
   },
   {
