@@ -1,6 +1,6 @@
 import type { Catalog, CatalogSkill } from "./catalog.js";
 import { MAX_BOUND } from "./config.js";
-import { readBinding } from "./bind.js";
+import { resolveBinding } from "./bind.js";
 
 type Env = NodeJS.ProcessEnv;
 
@@ -8,7 +8,7 @@ export type IdleCandidate = { name: string; path: string; description: string; r
 
 /** Dry-run only: never moves or deletes. */
 export function planArchiveIdle(catalog: Catalog, env: Env = process.env) {
-  const binding = readBinding(env);
+  const binding = resolveBinding(env).state;
   const recent = new Set(binding.skills.slice(0, MAX_BOUND).map((s) => s.name));
   const candidates: IdleCandidate[] = catalog.skills
     .filter((s: CatalogSkill) => !recent.has(s.name))

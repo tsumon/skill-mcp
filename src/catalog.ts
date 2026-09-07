@@ -113,18 +113,39 @@ export function shadowWhy(
   return "lex-path";
 }
 
+export function shadowMessage(
+  loser: Pick<CatalogSkill, "name" | "tier" | "path">,
+  winner: Pick<CatalogSkill, "name" | "tier" | "path">,
+): string {
+  const why = shadowWhy(loser, winner);
+  const who = `the ${winner.tier} copy at ${winner.path}`;
+  if (why === "project-beats-user") {
+    return `Skill "${loser.name}" is shadowed by ${who}. Project skills beat user skills, so this user copy at ${loser.path} stays hidden.`;
+  }
+  if (why === "project-beats-plugin") {
+    return `Skill "${loser.name}" is shadowed by ${who}. Project skills beat plugin skills, so this plugin copy at ${loser.path} stays hidden.`;
+  }
+  if (why === "user-beats-plugin") {
+    return `Skill "${loser.name}" is shadowed by ${who}. User skills beat plugin skills, so this plugin copy at ${loser.path} stays hidden.`;
+  }
+  if (why === "shorter-path") {
+    return `Skill "${loser.name}" is shadowed by ${who}. Both are ${winner.tier} skills; the shorter path wins, so ${loser.path} stays hidden.`;
+  }
+  return `Skill "${loser.name}" is shadowed by ${who}. Both are ${winner.tier} skills with the same path length; the lexicographically earlier path wins, so ${loser.path} stays hidden.`;
+}
+
 export function unshadowHint(
   loser: Pick<CatalogSkill, "name" | "tier" | "path">,
   winner: Pick<CatalogSkill, "tier" | "path">,
 ): string {
   const why = shadowWhy(loser, winner);
   if (why === "project-beats-user") {
-    return `manually archive ${loser.name} then re-scan roots`;
+    return `To use this copy: archive or rename the winning project skill at ${winner.path}, then re-scan roots with rescan_skills.`;
   }
   if (why === "project-beats-plugin" || why === "user-beats-plugin") {
-    return "leave it or uninstall the plugin outside skill-mcp";
+    return `To use this copy: leave it, or uninstall the plugin outside skill-mcp, then re-scan roots with rescan_skills.`;
   }
-  return "remove or rename the winning path, then re-scan roots";
+  return `To use this copy: archive or rename the winning path at ${winner.path}, then re-scan roots with rescan_skills.`;
 }
 
 export function dedupSkills(records: CatalogSkill[]): Catalog {

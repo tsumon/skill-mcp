@@ -1,12 +1,31 @@
 import { readFileSync, existsSync } from "node:fs";
-import { buildCatalog, shadowWhy, unshadowHint, type CatalogSkill } from "./catalog.js";
-import { clearBinding, readBinding, whyBinding, writeBinding, type LeanSkill } from "./bind.js";
+import { buildCatalog, shadowMessage, shadowWhy, unshadowHint, type Catalog, type CatalogSkill } from "./catalog.js";
+import {
+  bindingContract,
+  clearBindingAt,
+  parseBindScope,
+  resetSessionBindings,
+  resolveBinding,
+  whyBinding,
+  writeBindingAt,
+  type BindingState,
+  type BindScope,
+  type LeanSkill,
+} from "./bind.js";
 import { MAX_BOUND, resolveRoots, DEFAULT_TOKEN_BUDGET } from "./config.js";
 import { runDoctor } from "./doctor.js";
 import { planArchiveIdle } from "./archive.js";
+import {
+  embeddingMode,
+  rankEmbedded,
+  resolveEmbeddingClient,
+  setEmbeddingClient,
+} from "./embeddings.js";
 import { suggestSkills } from "./suggest.js";
 import { estimateTokens } from "./tokens.js";
 import { loadSkillMd } from "./ranker.js";
+
+export { resetSessionBindings, setEmbeddingClient };
 
 type Env = NodeJS.ProcessEnv;
 
@@ -24,27 +43,107 @@ function lean(s: CatalogSkill) {
   return { name: s.name, description: s.description, path: s.path, tokens: s.tokens, tier: s.tier };
 }
 
-export function getCatalog(env: Env = process.env) {
-  return buildCatalog(resolveRoots(env));
+const catalogCache = new Map<string, Catalog>();
+
+function rootsKey(env: Env): string {
+  return resolveRoots(env)
+    .map((s) => s.tier + ":" + s.root)
+    .join("\n");
 }
 
-export function handleTool(name: string, args: Record<string, unknown>, env: Env = process.env): ToolResult {
+export function clearCatalogCache(): void {
+  catalogCache.clear();
+}
+
+export function getCatalog(env: Env = process.env, opts: { rescan?: boolean } = {}) {
+  const key = rootsKey(env);
+  if (!opts.rescan) {
+    const hit = catalogCache.get(key);
+    if (hit) return hit;
+  }
+  const catalog = buildCatalog(resolveRoots(env));
+  catalogCache.set(key, catalog);
+  return catalog;
+}
+
+export function rescanCatalog(env: Env = process.env): {
+  catalog: Catalog;
+  added: string[];
+  removed: string[];
+  unchanged: number;
+} {
+  const key = rootsKey(env);
+  const previous = catalogCache.get(key);
+  const catalog = getCatalog(env, { rescan: true });
+  const prevNames = new Set((previous?.skills ?? []).map((s) => s.name));
+  const nextNames = new Set(catalog.skills.map((s) => s.name));
+  const added = catalog.skills.map((s) => s.name).filter((n) => !prevNames.has(n));
+  const removed = [...prevNames].filter((n) => !nextNames.has(n));
+  return {
+    catalog,
+    added,
+    removed,
+    unchanged: catalog.skills.length - added.length,
+  };
+}
+
+export async function handleTool(name: string, args: Record<string, unknown>, env: Env = process.env): Promise<ToolResult> {
   try {
     switch (name) {
       case "list_skills": return toolListSkills(env);
-      case "suggest_skills": return toolSuggest(args, env);
+      case "suggest_skills": return await toolSuggest(args, env);
       case "bind_skills": return toolBind(args, env);
-      case "get_binding": return ok(readBinding(env));
-      case "why": return ok({ why: whyBinding(readBinding(env)), binding: readBinding(env) });
+      case "get_binding": return toolGetBinding(args, env);
+      case "why": {
+        const resolved = resolveBinding(env);
+        return ok({ why: whyBinding(resolved.state), binding: resolved.state, scope: resolved.scope });
+      }
       case "estimate_tokens": return toolEstimate(args, env);
       case "doctor": return ok(runDoctor(env));
       case "archive_idle": return ok(planArchiveIdle(getCatalog(env), env));
       case "read_skill": return toolReadSkill(args, env);
+      case "rescan_skills": return toolRescan(env);
       default: return err("Unknown tool: " + name);
     }
   } catch (e) {
     return err(e instanceof Error ? e.message : String(e));
   }
+}
+
+function bindingView(scope: BindScope, state: BindingState, snapshot: ReturnType<typeof resolveBinding>) {
+  return {
+    ...state,
+    scope,
+    contract: bindingContract(state),
+    persistence: snapshot.persistence,
+    priority: snapshot.priority,
+  };
+}
+
+function toolGetBinding(args: Record<string, unknown>, env: Env): ToolResult {
+  const snapshot = resolveBinding(env);
+  const requested = parseBindScope(args.scope, null);
+  if (requested) {
+    const state = snapshot.scopes[requested] ?? { version: 1 as const, updatedAt: new Date().toISOString(), none: true, skills: [], reasons: {}, source: "clear" as const };
+    return ok(bindingView(requested, state, snapshot));
+  }
+  return ok({
+    ...bindingView(snapshot.scope, snapshot.state, snapshot),
+    scopes: snapshot.scopes,
+  });
+}
+
+function toolRescan(env: Env): ToolResult {
+  const result = rescanCatalog(env);
+  return ok({
+    rescanned: true,
+    skills: result.catalog.skills.map((s) => lean(s)),
+    count: result.catalog.skills.length,
+    shadowed_count: result.catalog.shadowed.length,
+    added: result.added,
+    removed: result.removed,
+    unchanged: result.unchanged,
+  });
 }
 
 function toolListSkills(env: Env): ToolResult {
@@ -56,6 +155,7 @@ function toolListSkills(env: Env): ToolResult {
       ...lean(s),
       shadowed: true,
       shadow_why: winner ? shadowWhy(s, winner) : "unknown",
+      shadow_message: winner ? shadowMessage(s, winner) : "This skill is shadowed; the winning copy could not be identified.",
       unshadow_hint: winner ? unshadowHint(s, winner) : "",
     };
   });
@@ -67,12 +167,42 @@ function toolListSkills(env: Env): ToolResult {
   });
 }
 
-function toolSuggest(args: Record<string, unknown>, env: Env): ToolResult {
+async function toolSuggest(args: Record<string, unknown>, env: Env): Promise<ToolResult> {
   const prompt = String(args.prompt ?? args.query ?? "");
   if (!prompt.trim()) return err("prompt is required");
   const budget = typeof args.budget === "number" ? args.budget : DEFAULT_TOKEN_BUDGET;
   const catalog = getCatalog(env);
-  return ok(suggestSkills(catalog.skills, prompt, budget));
+  const lexical = () => suggestSkills(catalog.skills, prompt, budget);
+  const mode = embeddingMode(env);
+  if (mode === "off") {
+    return ok({ ...lexical(), router: "lexical" });
+  }
+  const client = resolveEmbeddingClient(env);
+  if (!client) {
+    return ok({
+      ...lexical(),
+      router: "lexical",
+      router_note: "embedding unavailable; using lexical",
+    });
+  }
+  try {
+    const available = await client.available();
+    if (!available) {
+      return ok({
+        ...lexical(),
+        router: "lexical",
+        router_note: "embedding unavailable; using lexical",
+      });
+    }
+    const ranked = await rankEmbedded(catalog.skills, prompt, client);
+    return ok({ ...suggestSkills(catalog.skills, prompt, budget, ranked), router: "embedding" });
+  } catch {
+    return ok({
+      ...lexical(),
+      router: "lexical",
+      router_note: "embedding unavailable; using lexical",
+    });
+  }
 }
 
 function parseNames(raw: unknown): string[] {
@@ -84,8 +214,12 @@ function parseNames(raw: unknown): string[] {
 }
 
 function toolBind(args: Record<string, unknown>, env: Env): ToolResult {
+  const scope = parseBindScope(args.scope, "global") ?? "global";
   const clear = Boolean(args.clear) || args.names === "none" || args.none === true;
-  if (clear) return ok(clearBinding(env));
+  if (clear) {
+    const state = clearBindingAt(scope, env);
+    return ok(bindingView(scope, state, resolveBinding(env)));
+  }
   const names = parseNames(args.names ?? args.skills);
   if (names.length === 0) return err("provide names[] or clear:true");
   if (names.length > MAX_BOUND) return err("max " + MAX_BOUND + " skills; got " + names.length);
@@ -100,8 +234,12 @@ function toolBind(args: Record<string, unknown>, env: Env): ToolResult {
     skills.push({ name: s.name, description: s.description, path: s.path, tokens: s.tokens });
     reasons[n] = reasonMap[n] ?? "manual bind";
   }
-  writeBinding({ version: 1, updatedAt: new Date().toISOString(), none: false, skills, reasons, source: "manual" }, env);
-  return ok(readBinding(env));
+  const written = writeBindingAt(
+    scope,
+    { version: 1, updatedAt: new Date().toISOString(), none: false, skills, reasons, source: "manual" },
+    env,
+  );
+  return ok(bindingView(scope, written, resolveBinding(env)));
 }
 
 function toolEstimate(args: Record<string, unknown>, env: Env): ToolResult {

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import { CallToolRequestSchema, ListResourcesRequestSchema, ListToolsRequestSchema, ReadResourceRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import { listBindingResources, readBindingResource } from "./resources.js";
 import { handleTool } from "./tools.js";
 
 const TOOLS = [
@@ -25,7 +26,7 @@ const TOOLS = [
   },
   {
     name: "bind_skills",
-    description: "Persist lean binding (name/description/path only). Max 3. Pass clear:true or none to clear.",
+    description: "Persist lean binding (name/description/path only). Max 3. Pass clear:true or none to clear. Optional scope: session (in-memory), project (.skill-mcp/binding.json), or global (~/.config/skill-mcp/binding.json). Default global. Priority: session > project > global.",
     inputSchema: {
       type: "object",
       properties: {
@@ -33,14 +34,19 @@ const TOOLS = [
         clear: { type: "boolean" },
         none: { type: "boolean" },
         reasons: { type: "object", additionalProperties: { type: "string" } },
+        scope: { type: "string", enum: ["session", "project", "global"] },
       },
       additionalProperties: false,
     },
   },
   {
     name: "get_binding",
-    description: "Return current lean skill binding.",
-    inputSchema: { type: "object", properties: {}, additionalProperties: false },
+    description: "Return current lean skill binding. Default is the resolved binding (session > project > global). Pass scope to inspect one layer. Includes the host contract (only these N skills).",
+    inputSchema: {
+      type: "object",
+      properties: { scope: { type: "string", enum: ["session", "project", "global"] } },
+      additionalProperties: false,
+    },
   },
   {
     name: "why",
@@ -80,11 +86,16 @@ const TOOLS = [
       additionalProperties: false,
     },
   },
+  {
+    name: "rescan_skills",
+    description: "Rescan skill roots into the in-memory catalog without restarting the MCP process. list_skills and suggest_skills then reflect new/changed/removed skills.",
+    inputSchema: { type: "object", properties: {}, additionalProperties: false },
+  },
 ] as const;
 
 const server = new Server(
-  { name: "skill-mcp", version: "0.1.0" },
-  { capabilities: { tools: {} } },
+  { name: "skill-mcp", version: "0.1.1" },
+  { capabilities: { tools: {}, resources: {} } },
 );
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
@@ -97,10 +108,19 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   return handleTool(name, args);
 });
 
+server.setRequestHandler(ListResourcesRequestSchema, async () => ({
+  resources: listBindingResources(),
+}));
+
+server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+  const body = readBindingResource(request.params.uri);
+  return { contents: [{ uri: body.uri, mimeType: body.mimeType, text: body.text }] };
+});
+
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("skill-mcp v0.1.0 listening on stdio");
+  console.error("skill-mcp v0.1.1 listening on stdio");
 }
 
 main().catch((err) => {

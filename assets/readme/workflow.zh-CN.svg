@@ -31,7 +31,7 @@
     <rect x="426" y="156" width="348" height="168" rx="14" fill="#1C2218" stroke="#C6F25A" stroke-width="1.5"/>
     <text x="446" y="188" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">02  SUGGEST</text>
     <text x="446" y="220" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="600">suggest_skills</text>
-    <text x="446" y="252" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">词法排序 · CJK 友好</text>
+    <text x="446" y="252" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">返回 names[] 可直接 bind</text>
     <text x="446" y="278" fill="#E8B84A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">最多保留 3 个（硬上限）</text>
     <text x="446" y="304" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">然后再套用 token 预算</text>
   </g>

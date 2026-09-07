@@ -20,6 +20,22 @@ export function bindingPath(env: Env = process.env): string {
   return path.join(stateDir(env), "binding.json");
 }
 
+export function projectDir(env: Env = process.env): string {
+  return env.SKILL_MCP_PROJECT_DIR || env.PWD || process.cwd();
+}
+
+export function projectStateDir(env: Env = process.env): string {
+  return path.join(projectDir(env), ".skill-mcp");
+}
+
+export function projectBindingPath(env: Env = process.env): string {
+  return path.join(projectStateDir(env), "binding.json");
+}
+
+export function sessionId(env: Env = process.env): string {
+  return env.SKILL_MCP_SESSION_ID || "default";
+}
+
 export function defaultRoots(home: string = homedir()): string[] {
   return [
     path.join(home, ".claude", "skills"),
@@ -35,8 +51,23 @@ export function parseRootsEnv(env: Env = process.env): string[] | null {
   return raw.split(/[,:;]/).map((s) => s.trim()).filter(Boolean);
 }
 
+function parseRootList(raw: string | undefined): string[] {
+  if (!raw || !raw.trim()) return [];
+  return raw.split(/[,:;]/).map((s) => s.trim()).filter(Boolean);
+}
+
 export function resolveRoots(env: Env = process.env): CatalogSource[] {
   const home = homedir(env);
-  const roots = parseRootsEnv(env) ?? defaultRoots(home);
-  return roots.map((root) => ({ root, tier: "user" as const }));
+  const sources: CatalogSource[] = [];
+  for (const root of parseRootList(env.SKILL_MCP_PROJECT_ROOTS)) {
+    sources.push({ root, tier: "project" });
+  }
+  const userRoots = parseRootsEnv(env) ?? defaultRoots(home);
+  for (const root of userRoots) {
+    sources.push({ root, tier: "user" });
+  }
+  for (const root of parseRootList(env.SKILL_MCP_PLUGIN_ROOTS)) {
+    sources.push({ root, tier: "plugin" });
+  }
+  return sources;
 }

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "skill-mcp": {
+      "command": "/usr/bin/node",
+      "args": [
+        "/workspace/skill-mcp-work/skill-mcp/dist/index.js"
+      ]
+    }
+  }
+}

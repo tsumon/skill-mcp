@@ -58,9 +58,9 @@ function jsonHasBody(value: unknown): boolean {
   return false;
 }
 
-test("list_skills returns lean catalog", () => {
+test("list_skills returns lean catalog", async () => {
   const { env, cleanup } = setup();
-  const res = handleTool("list_skills", {}, env);
+  const res = await handleTool("list_skills", {}, env);
   assert.equal(res.isError, undefined);
   const data = JSON.parse(res.content[0].text);
   assert.equal(data.count, 2);
@@ -69,43 +69,43 @@ test("list_skills returns lean catalog", () => {
   cleanup();
 });
 
-test("bind_skills rejects more than 3 names", () => {
+test("bind_skills rejects more than 3 names", async () => {
   const { env, cleanup } = setup();
-  const res = handleTool("bind_skills", { names: ["a", "b", "c", "d"] }, env);
+  const res = await handleTool("bind_skills", { names: ["a", "b", "c", "d"] }, env);
   assert.equal(res.isError, true);
   cleanup();
 });
 
-test("bind_skills and get_binding roundtrip", () => {
+test("bind_skills and get_binding roundtrip", async () => {
   const { env, cleanup } = setup();
-  const bound = handleTool("bind_skills", { names: ["alpha"] }, env);
+  const bound = await handleTool("bind_skills", { names: ["alpha"] }, env);
   assert.equal(bound.isError, undefined);
-  const got = handleTool("get_binding", {}, env);
+  const got = await handleTool("get_binding", {}, env);
   const data = JSON.parse(got.content[0].text);
   assert.deepEqual(data.skills.map((s: { name: string }) => s.name), ["alpha"]);
-  const why = handleTool("why", {}, env);
+  const why = await handleTool("why", {}, env);
   assert.match(why.content[0].text, /alpha/);
   cleanup();
 });
 
-test("doctor reports roots", () => {
+test("doctor reports roots", async () => {
   const { env, cleanup } = setup();
-  const res = handleTool("doctor", {}, env);
+  const res = await handleTool("doctor", {}, env);
   const data = JSON.parse(res.content[0].text);
   assert.equal(data.ok, true);
   assert.equal(data.skills, 2);
   cleanup();
 });
 
-test("doctor is dry-run only", () => {
+test("doctor is dry-run only", async () => {
   const { env, cleanup } = setup();
-  const res = handleTool("doctor", {}, env);
+  const res = await handleTool("doctor", {}, env);
   const data = JSON.parse(res.content[0].text);
   assert.equal(data.dry_run, true);
   cleanup();
 });
 
-test("doctor counts skills per root without prefix collision", () => {
+test("doctor counts skills per root without prefix collision", async () => {
   const { env, home, cleanup } = setup();
   const extra = path.join(home, ".claude", "skills-extra");
   mkdirSync(path.join(extra, "zulu"), { recursive: true });
@@ -115,7 +115,7 @@ test("doctor counts skills per root without prefix collision", () => {
     "utf8",
   );
   env.SKILL_MCP_ROOTS = env.SKILL_MCP_ROOTS + "," + extra;
-  const res = handleTool("doctor", {}, env);
+  const res = await handleTool("doctor", {}, env);
   const data = JSON.parse(res.content[0].text);
   const byRoot = new Map(data.roots.map((r: { root: string; count: number }) => [r.root, r.count]));
   assert.equal(byRoot.get(path.join(home, ".claude", "skills")), 2);
@@ -123,39 +123,39 @@ test("doctor counts skills per root without prefix collision", () => {
   cleanup();
 });
 
-test("archive_idle is dry-run", () => {
+test("archive_idle is dry-run", async () => {
   const { env, cleanup } = setup();
-  handleTool("bind_skills", { names: ["alpha"] }, env);
-  const res = handleTool("archive_idle", {}, env);
+  await handleTool("bind_skills", { names: ["alpha"] }, env);
+  const res = await handleTool("archive_idle", {}, env);
   const data = JSON.parse(res.content[0].text);
   assert.equal(data.dry_run, true);
   assert.ok(data.candidates.some((c: { name: string }) => c.name === "bravo"));
   cleanup();
 });
 
-test("read_skill returns body only when asked", () => {
+test("read_skill returns body only when asked", async () => {
   const { env, cleanup } = setup();
-  const res = handleTool("read_skill", { name: "alpha" }, env);
+  const res = await handleTool("read_skill", { name: "alpha" }, env);
   const data = JSON.parse(res.content[0].text);
   assert.match(data.body, /name: alpha/);
   cleanup();
 });
 
-test("read_skill requires an explicit name", () => {
+test("read_skill requires an explicit name", async () => {
   const { env, cleanup } = setup();
-  const res = handleTool("read_skill", {}, env);
+  const res = await handleTool("read_skill", {}, env);
   assert.equal(res.isError, true);
   assert.match(res.content[0].text, /name is required/);
   cleanup();
 });
 
-test("list/suggest/bind/doctor/archive stay lean without body", () => {
+test("list/suggest/bind/doctor/archive stay lean without body", async () => {
   const { env, cleanup } = setup();
-  const listed = JSON.parse(handleTool("list_skills", {}, env).content[0].text);
-  const suggested = JSON.parse(handleTool("suggest_skills", { prompt: "alpha login" }, env).content[0].text);
-  const bound = JSON.parse(handleTool("bind_skills", { names: ["alpha"] }, env).content[0].text);
-  const doctor = JSON.parse(handleTool("doctor", {}, env).content[0].text);
-  const archive = JSON.parse(handleTool("archive_idle", {}, env).content[0].text);
+  const listed = JSON.parse((await handleTool("list_skills", {}, env)).content[0].text);
+  const suggested = JSON.parse((await handleTool("suggest_skills", { prompt: "alpha login" }, env)).content[0].text);
+  const bound = JSON.parse((await handleTool("bind_skills", { names: ["alpha"] }, env)).content[0].text);
+  const doctor = JSON.parse((await handleTool("doctor", {}, env)).content[0].text);
+  const archive = JSON.parse((await handleTool("archive_idle", {}, env)).content[0].text);
   assert.equal(jsonHasBody(listed), false);
   assert.equal(jsonHasBody(suggested), false);
   assert.equal(jsonHasBody(bound), false);
@@ -164,13 +164,13 @@ test("list/suggest/bind/doctor/archive stay lean without body", () => {
   cleanup();
 });
 
-test("suggest_skills huge token budget never raises the max-3 cap", () => {
+test("suggest_skills huge token budget never raises the max-3 cap", async () => {
   const { env, root, cleanup } = setup();
   writeSkill(root, "charlie", "overlap token shared");
   writeSkill(root, "delta", "overlap token shared");
   writeFileSync(path.join(root, "alpha", "SKILL.md"), skillMd("alpha", "overlap token shared"), "utf8");
   writeFileSync(path.join(root, "bravo", "SKILL.md"), skillMd("bravo", "overlap token shared"), "utf8");
-  const res = handleTool("suggest_skills", { prompt: "overlap token shared", budget: 999999 }, env);
+  const res = await handleTool("suggest_skills", { prompt: "overlap token shared", budget: 999999 }, env);
   assert.equal(res.isError, undefined);
   const data = JSON.parse(res.content[0].text);
   assert.equal(data.skills.length, MAX_BOUND);
@@ -181,26 +181,26 @@ test("suggest_skills huge token budget never raises the max-3 cap", () => {
   cleanup();
 });
 
-test("CJK Chinese Japanese Korean names work on list/suggest/bind/read", () => {
+test("CJK Chinese Japanese Korean names work on list/suggest/bind/read", async () => {
   const { env, root, cleanup } = setup();
   writeSkill(root, "中文路由", "按中文意图路由技能");
   writeSkill(root, "ひらがな案内", "ひらがなでスキルを選ぶ");
   writeSkill(root, "한글라우팅", "한글 의도로 스킬을 고른다");
-  const listed = JSON.parse(handleTool("list_skills", {}, env).content[0].text);
+  const listed = JSON.parse((await handleTool("list_skills", {}, env)).content[0].text);
   const names = listed.skills.map((s: { name: string }) => s.name);
   assert.ok(names.includes("中文路由"));
   assert.ok(names.includes("ひらがな案内"));
   assert.ok(names.includes("한글라우팅"));
 
   const suggested = JSON.parse(
-    handleTool("suggest_skills", { prompt: "한글 라우팅" }, env).content[0].text,
+    (await handleTool("suggest_skills", { prompt: "한글 라우팅" }, env)).content[0].text,
   );
   assert.deepEqual(
     suggested.skills.map((s: { name: string }) => s.name),
     ["한글라우팅"],
   );
 
-  const bound = handleTool("bind_skills", { names: ["中文路由", "ひらがな案内", "한글라우팅"] }, env);
+  const bound = await handleTool("bind_skills", { names: ["中文路由", "ひらがな案内", "한글라우팅"] }, env);
   assert.equal(bound.isError, undefined);
   const binding = JSON.parse(bound.content[0].text);
   assert.deepEqual(
@@ -208,18 +208,18 @@ test("CJK Chinese Japanese Korean names work on list/suggest/bind/read", () => {
     ["中文路由", "ひらがな案内", "한글라우팅"],
   );
 
-  const read = JSON.parse(handleTool("read_skill", { name: "한글라우팅" }, env).content[0].text);
+  const read = JSON.parse((await handleTool("read_skill", { name: "한글라우팅" }, env)).content[0].text);
   assert.match(read.body, /한글라우팅/);
   cleanup();
 });
 
-test("doctor and archive_idle do not create move or delete files", () => {
+test("doctor and archive_idle do not create move or delete files", async () => {
   const { env, home, root, state, cleanup } = setup();
   const beforeSkills = treeSnapshot(root);
   const beforeHome = treeSnapshot(home);
   assert.equal(existsSync(state), false);
-  handleTool("doctor", {}, env);
-  handleTool("archive_idle", {}, env);
+  await handleTool("doctor", {}, env);
+  await handleTool("archive_idle", {}, env);
   assert.deepEqual(treeSnapshot(root), beforeSkills);
   assert.deepEqual(treeSnapshot(home), beforeHome);
   assert.equal(existsSync(state), false);

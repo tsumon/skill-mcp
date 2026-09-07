@@ -1,0 +1,39 @@
+[
+  {
+    "id": "zh-route",
+    "lang": "zh",
+    "prompt": "路由 技能",
+    "catalog": ["eval/ranker-fixtures"],
+    "expect": ["中文路由"]
+  },
+  {
+    "id": "ja-guide",
+    "lang": "ja",
+    "prompt": "ひらがなでスキルを選ぶ",
+    "catalog": ["eval/cjk"],
+    "expect": ["ひらがな案内"]
+  },
+  {
+    "id": "ko-route",
+    "lang": "ko",
+    "prompt": "한글 라우팅",
+    "catalog": ["eval/ranker-fixtures"],
+    "expect": ["한글라우팅"]
+  },
+  {
+    "id": "conflict-overlap",
+    "conflict": true,
+    "prompt": "overlap token shared",
+    "catalog": ["eval/ranker-fixtures"],
+    "expect": ["overlap-alpha", "overlap-bravo", "overlap-charlie"],
+    "expectOverflow": ["overlap-delta"]
+  },
+  {
+    "id": "conflict-auth",
+    "conflict": true,
+    "prompt": "oauth login session token",
+    "catalog": ["eval/conflicts"],
+    "expect": ["auth-login", "auth-oauth", "auth-session"],
+    "expectOverflow": ["auth-token"]
+  }
+]

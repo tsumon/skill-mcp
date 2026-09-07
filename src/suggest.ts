@@ -13,18 +13,27 @@ export type SuggestDropped = {
 
 export type SuggestResult = {
   skills: Array<RankedSkill & { description: string; tokens: number }>;
+  names: string[];
+  next_step: string;
   dropped: SuggestDropped[];
   none: boolean;
   budget: { max_tokens: number; used_tokens: number };
   cap: number;
 };
 
+export function bindNextStep(names: string[]): string {
+  if (names.length === 0) {
+    return "Next step: no matching skills to bind. Call list_skills or try a more specific prompt.";
+  }
+  return "Next step: call bind_skills with names " + JSON.stringify(names) + ".";
+}
+
 export function suggestSkills(
   catalog: CatalogSkill[],
   prompt: string,
   budgetTokens: number = DEFAULT_TOKEN_BUDGET,
+  ranked = rank(catalog, prompt),
 ): SuggestResult {
-  const ranked = rank(catalog, prompt);
   const byName = new Map(catalog.map((s) => [s.name, s]));
   const withTokens = ranked.skills.map((r) => {
     const full = byName.get(r.name);
@@ -56,8 +65,11 @@ export function suggestSkills(
   ];
 
   const used = keptByBudget.reduce((n, s) => n + s.tokens, 0);
+  const names = keptByBudget.map((s) => s.name);
   return {
     skills: keptByBudget,
+    names,
+    next_step: bindNextStep(names),
     dropped,
     none: keptByBudget.length === 0,
     budget: { max_tokens: budgetTokens, used_tokens: used },
