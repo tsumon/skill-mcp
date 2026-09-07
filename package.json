@@ -1,0 +1,43 @@
+{
+  "name": "skill-mcp",
+  "version": "0.1.0",
+  "description": "Local stdio MCP server to pick SKILL.md skills and keep context small",
+  "type": "module",
+  "bin": {
+    "skill-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "node --import tsx --test test/*.test.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tsumon/skill-mcp.git"
+  },
+  "keywords": [
+    "mcp",
+    "skills",
+    "skill",
+    "claude",
+    "cursor",
+    "stdio"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "README.zh-CN.md"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}
