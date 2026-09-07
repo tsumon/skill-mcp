@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="460" viewBox="0 0 1200 460" role="img" aria-labelledby="title desc">
+  <title id="title">list_skills、suggest_skills、bind_skills</title>
+  <desc id="desc">列出本地 SKILL.md，按 prompt 排序并硬限制最多 3 个，再套用不会提高 cap 的 token 预算，最后写入精简绑定。完整正文只能通过 read_skill 读取。</desc>
+
+  <rect width="1200" height="460" rx="26" fill="#121610"/>
+
+  <g id="cap-tally" transform="translate(56 36)">
+    <rect width="3.5" height="16" rx="1" fill="#E8B84A"/>
+    <rect x="8" width="3.5" height="16" rx="1" fill="#E8B84A"/>
+    <rect x="16" width="3.5" height="16" rx="1" fill="#E8B84A"/>
+  </g>
+  <text x="88" y="50" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, 'PingFang SC', sans-serif" font-size="18" letter-spacing="1.5">核心循环</text>
+  <text x="1144" y="50" text-anchor="end" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, 'PingFang SC', sans-serif" font-size="18">先 CAP · 再 BUDGET</text>
+
+  <text x="56" y="96" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="32" font-weight="700">list → suggest → bind</text>
+  <text x="56" y="128" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">硬上限 3。默认预算 4000。默认精简视图。</text>
+
+  <g id="stage-list">
+    <rect x="56" y="156" width="348" height="168" rx="14" fill="#1C2218" stroke="#2E3828" stroke-width="1.25"/>
+    <text x="76" y="188" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">01  LIST</text>
+    <text x="76" y="220" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="600">list_skills</text>
+    <text x="76" y="252" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">扫描本地技能根目录</text>
+    <text x="76" y="278" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">name · description · path</text>
+    <text x="76" y="304" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">包含被遮蔽的重复项</text>
+  </g>
+
+  <path d="M416 240 L424 240" stroke="#5C6454" stroke-width="2"/>
+  <path d="M418 234 L426 240 L418 246" fill="none" stroke="#5C6454" stroke-width="2" stroke-linejoin="round"/>
+
+  <g id="stage-suggest">
+    <rect x="426" y="156" width="348" height="168" rx="14" fill="#1C2218" stroke="#C6F25A" stroke-width="1.5"/>
+    <text x="446" y="188" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">02  SUGGEST</text>
+    <text x="446" y="220" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="600">suggest_skills</text>
+    <text x="446" y="252" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">词法排序 · CJK 友好</text>
+    <text x="446" y="278" fill="#E8B84A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">最多保留 3 个（硬上限）</text>
+    <text x="446" y="304" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">然后再套用 token 预算</text>
+  </g>
+
+  <path d="M786 240 L794 240" stroke="#5C6454" stroke-width="2"/>
+  <path d="M788 234 L796 240 L788 246" fill="none" stroke="#5C6454" stroke-width="2" stroke-linejoin="round"/>
+
+  <g id="stage-bind">
+    <rect x="796" y="156" width="348" height="168" rx="14" fill="#1C2218" stroke="#2E3828" stroke-width="1.25"/>
+    <text x="816" y="188" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">03  BIND</text>
+    <text x="816" y="220" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="600">bind_skills</text>
+    <text x="816" y="252" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">写入精简 binding.json</text>
+    <text x="816" y="278" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">超过 3 个名称会被拒绝</text>
+    <text x="816" y="304" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">clear:true 或 none 可清空</text>
+  </g>
+
+  <g id="result-schematic">
+    <rect x="56" y="344" width="1088" height="80" rx="14" fill="#1C2218" stroke="#2E3828" stroke-width="1.25"/>
+
+    <text x="76" y="376" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">SLOTS</text>
+    <rect x="156" y="360" width="28" height="20" rx="4" fill="#C6F25A"/>
+    <rect x="190" y="360" width="28" height="20" rx="4" fill="#C6F25A"/>
+    <rect x="224" y="360" width="28" height="20" rx="4" fill="none" stroke="#5C6454" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <text x="264" y="376" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">最多 3</text>
+
+    <text x="360" y="376" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">DROPPED</text>
+    <text x="456" y="376" fill="#E8B84A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">why: cap</text>
+    <text x="560" y="376" fill="#D96B4A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">why: budget</text>
+
+    <text x="76" y="406" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">LEAN</text>
+    <text x="156" y="406" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">name · description · path</text>
+    <text x="456" y="406" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">完整 SKILL.md 正文只能用 read_skill</text>
+  </g>
+</svg>

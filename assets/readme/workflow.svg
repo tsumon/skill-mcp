@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="460" viewBox="0 0 1200 460" role="img" aria-labelledby="title desc">
+  <title id="title">list_skills, suggest_skills, bind_skills</title>
+  <desc id="desc">Catalog local SKILL.md files, rank a prompt with a hard cap of 3, apply a token budget that never raises the cap, then persist a lean binding. Full bodies load only through read_skill.</desc>
+
+  <rect width="1200" height="460" rx="26" fill="#121610"/>
+
+  <g id="cap-tally" transform="translate(56 36)">
+    <rect width="3.5" height="16" rx="1" fill="#E8B84A"/>
+    <rect x="8" width="3.5" height="16" rx="1" fill="#E8B84A"/>
+    <rect x="16" width="3.5" height="16" rx="1" fill="#E8B84A"/>
+  </g>
+  <text x="88" y="50" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" letter-spacing="1.5">CORE LOOP</text>
+  <text x="1144" y="50" text-anchor="end" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">CAP FIRST · THEN BUDGET</text>
+
+  <text x="56" y="96" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="32" font-weight="700">list → suggest → bind</text>
+  <text x="56" y="128" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">Hard cap 3. Default budget 4000. Lean by default.</text>
+
+  <g id="stage-list">
+    <rect x="56" y="156" width="348" height="168" rx="14" fill="#1C2218" stroke="#2E3828" stroke-width="1.25"/>
+    <text x="76" y="188" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">01  LIST</text>
+    <text x="76" y="220" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="600">list_skills</text>
+    <text x="76" y="252" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">Scan local skill roots</text>
+    <text x="76" y="278" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">name · description · path</text>
+    <text x="76" y="304" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">Shadowed duplicates included</text>
+  </g>
+
+  <path d="M416 240 L424 240" stroke="#5C6454" stroke-width="2"/>
+  <path d="M418 234 L426 240 L418 246" fill="none" stroke="#5C6454" stroke-width="2" stroke-linejoin="round"/>
+
+  <g id="stage-suggest">
+    <rect x="426" y="156" width="348" height="168" rx="14" fill="#1C2218" stroke="#C6F25A" stroke-width="1.5"/>
+    <text x="446" y="188" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">02  SUGGEST</text>
+    <text x="446" y="220" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="600">suggest_skills</text>
+    <text x="446" y="252" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">Lexical rank · CJK-aware</text>
+    <text x="446" y="278" fill="#E8B84A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">Keep ≤ 3 (hard cap)</text>
+    <text x="446" y="304" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">Then apply token budget</text>
+  </g>
+
+  <path d="M786 240 L794 240" stroke="#5C6454" stroke-width="2"/>
+  <path d="M788 234 L796 240 L788 246" fill="none" stroke="#5C6454" stroke-width="2" stroke-linejoin="round"/>
+
+  <g id="stage-bind">
+    <rect x="796" y="156" width="348" height="168" rx="14" fill="#1C2218" stroke="#2E3828" stroke-width="1.25"/>
+    <text x="816" y="188" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">03  BIND</text>
+    <text x="816" y="220" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="600">bind_skills</text>
+    <text x="816" y="252" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">Write lean binding.json</text>
+    <text x="816" y="278" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">Rejects more than 3 names</text>
+    <text x="816" y="304" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">clear:true or none to clear</text>
+  </g>
+
+  <g id="result-schematic">
+    <rect x="56" y="344" width="1088" height="80" rx="14" fill="#1C2218" stroke="#2E3828" stroke-width="1.25"/>
+
+    <text x="76" y="376" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">SLOTS</text>
+    <rect x="156" y="360" width="28" height="20" rx="4" fill="#C6F25A"/>
+    <rect x="190" y="360" width="28" height="20" rx="4" fill="#C6F25A"/>
+    <rect x="224" y="360" width="28" height="20" rx="4" fill="none" stroke="#5C6454" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <text x="264" y="376" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">3 max</text>
+
+    <text x="360" y="376" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">DROPPED</text>
+    <text x="456" y="376" fill="#E8B84A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">why: cap</text>
+    <text x="560" y="376" fill="#D96B4A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">why: budget</text>
+
+    <text x="76" y="406" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">LEAN</text>
+    <text x="156" y="406" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">name · description · path</text>
+    <text x="456" y="406" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">full SKILL.md body only via read_skill</text>
+  </g>
+</svg>
