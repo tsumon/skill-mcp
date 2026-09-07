@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-labelledby="title desc">
+  <title id="title">v0.2.0</title>
+  <desc id="desc">Release v0.2.0: Mac attach, 30-second demo, host contract injection, CI goldens, optional binary, empty suggest copy, dry-run auto-uninstall with --apply, native-skills bypass with one-step restore.</desc>
+  <rect width="1200" height="300" rx="26" fill="#121610"/>
+
+  <g id="cap-tally" transform="translate(56 28)">
+    <rect width="3.5" height="16" rx="1" fill="#E8B84A"/>
+    <rect x="8" width="3.5" height="16" rx="1" fill="#E8B84A"/>
+    <rect x="16" width="3.5" height="16" rx="1" fill="#E8B84A"/>
+  </g>
+  <text x="88" y="42" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">RELEASE</text>
+  <text x="1144" y="42" text-anchor="end" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">v0.2.0</text>
+
+  <text x="56" y="88" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="32" font-weight="700">What landed</text>
+
+  <text x="56" y="136" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">A</text>
+  <text x="88" y="136" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">Mac / local attach, absolute mcp.json</text>
+  <text x="620" y="136" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">B</text>
+  <text x="652" y="136" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">30-second demo: too many → 3</text>
+
+  <text x="56" y="176" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">C</text>
+  <text x="88" y="176" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">Host contract files, not only a resource</text>
+  <text x="620" y="176" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">D</text>
+  <text x="652" y="176" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">CI: test + tsc + eval goldens</text>
+
+  <text x="56" y="216" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">E</text>
+  <text x="88" y="216" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">Optional bun compile binary</text>
+  <text x="620" y="216" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">F</text>
+  <text x="652" y="216" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">Empty suggest: no such skill</text>
+
+  <text x="56" y="256" fill="#E8B84A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">G</text>
+  <text x="88" y="256" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">Archive idle: dry-run / --apply</text>
+  <text x="620" y="256" fill="#E8B84A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">H</text>
+  <text x="652" y="256" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">Native skills bypass + restore</text>
+</svg>

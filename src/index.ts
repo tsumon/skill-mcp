@@ -2,8 +2,11 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListResourcesRequestSchema, ListToolsRequestSchema, ReadResourceRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import { printCli, runCli } from "./cli.js";
 import { listBindingResources, readBindingResource } from "./resources.js";
 import { handleTool } from "./tools.js";
+
+const CLI_COMMANDS = new Set(["archive-idle", "write-contract", "native-skills", "help"]);
 
 const TOOLS = [
   {
@@ -73,8 +76,12 @@ const TOOLS = [
   },
   {
     name: "archive_idle",
-    description: "Dry-run only: list idle skill candidates. Never moves or deletes.",
-    inputSchema: { type: "object", properties: {}, additionalProperties: false },
+    description: "List idle and shadowed user-tier skills. Default dry-run reports what would move. Pass apply:true to archive into a recoverable path. Never silent-deletes.",
+    inputSchema: {
+      type: "object",
+      properties: { apply: { type: "boolean", description: "When true, move candidates into a recoverable archive. Default false (dry-run)." } },
+      additionalProperties: false,
+    },
   },
   {
     name: "read_skill",
@@ -91,10 +98,27 @@ const TOOLS = [
     description: "Rescan skill roots into the in-memory catalog without restarting the MCP process. list_skills and suggest_skills then reflect new/changed/removed skills.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
   },
+  {
+    name: "write_host_contract",
+    description: "Write the current binding contract into Claude CLAUDE.md and Cursor .cursor/rules in one shot. The files list only bound skills and forbid others.",
+    inputSchema: { type: "object", properties: {}, additionalProperties: false },
+  },
+  {
+    name: "native_skills_bypass",
+    description: "Optional: write Claude skillOverrides name-only so the host listing does not dump every skill description. enabled:true writes; enabled:false restores the previous settings in one step. Risk: routing fight with Claude Code native skills.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        enabled: { type: "boolean", description: "true writes name-only skillOverrides; false restores the prior host file" },
+      },
+      required: ["enabled"],
+      additionalProperties: false,
+    },
+  },
 ] as const;
 
 const server = new Server(
-  { name: "skill-mcp", version: "0.1.1" },
+  { name: "skill-mcp", version: "0.2.0" },
   { capabilities: { tools: {}, resources: {} } },
 );
 
@@ -118,9 +142,15 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
 });
 
 async function main() {
+  const cmd = process.argv[2];
+  if (cmd && CLI_COMMANDS.has(cmd)) {
+    const result = await runCli(process.argv.slice(2));
+    printCli(result);
+    process.exit(result.ok ? 0 : 1);
+  }
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("skill-mcp v0.1.1 listening on stdio");
+  console.error("skill-mcp v0.2.0 listening on stdio");
 }
 
 main().catch((err) => {

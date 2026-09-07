@@ -57,8 +57,11 @@ function mergeMcpFile(file: string, incoming: McpFile): void {
   writeFileSync(file, JSON.stringify(current, null, 2) + "\n", "utf8");
 }
 
-export function hostConfigPaths(home: string = os.homedir()): { claude: string; cursor: string } {
-  const claude = process.platform === "darwin"
+export function hostConfigPaths(
+  home: string = os.homedir(),
+  platform: NodeJS.Platform = process.platform,
+): { claude: string; cursor: string } {
+  const claude = platform === "darwin"
     ? path.join(home, "Library", "Application Support", "Claude", "claude_desktop_config.json")
     : path.join(home, ".config", "Claude", "claude_desktop_config.json");
   return {
@@ -67,13 +70,17 @@ export function hostConfigPaths(home: string = os.homedir()): { claude: string; 
   };
 }
 
-export function installHostConfigs(opts: GenerateOpts & { home?: string; writeHosts?: boolean }): {
+export function installHostConfigs(opts: GenerateOpts & {
+  home?: string;
+  writeHosts?: boolean;
+  platform?: NodeJS.Platform;
+}): {
   claude?: string;
   cursor?: string;
 } {
   if (opts.writeHosts === false) return {};
   const snippets = generateMcpSnippets(opts);
-  const hosts = hostConfigPaths(opts.home);
+  const hosts = hostConfigPaths(opts.home, opts.platform);
   const out: { claude?: string; cursor?: string } = {};
   mergeMcpFile(hosts.claude, snippets.claude);
   out.claude = hosts.claude;

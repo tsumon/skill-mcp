@@ -27,3 +27,6 @@ console.log("  Cursor snippet: " + written.cursor);
 if (hosts.claude) console.log("  Claude Desktop config: " + hosts.claude);
 if (hosts.cursor) console.log("  Cursor config: " + hosts.cursor);
 console.log("Restart Claude Desktop / Cursor after wiring.");
+console.log("Next: bind_skills then: node dist/index.js write-contract");
+console.log("Archive idle (dry-run): node dist/index.js archive-idle");
+console.log("Native skills bypass: node dist/index.js native-skills enable|restore");

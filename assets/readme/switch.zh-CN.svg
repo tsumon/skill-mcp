@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">G dry-run / --apply 与 H enable / restore</title>
+  <desc id="desc">自动卸载默认 dry-run；只有 --apply 或 apply:true 才会把闲置/被遮蔽的 user-tier skill 移到可恢复归档。原生 Skills 旁路写入 Claude skillOverrides name-only；restore 一步恢复原先 settings。</desc>
+  <rect width="1200" height="360" rx="26" fill="#121610"/>
+
+  <g id="cap-tally" transform="translate(56 28)">
+    <rect width="3.5" height="16" rx="1" fill="#E8B84A"/>
+    <rect x="8" width="3.5" height="16" rx="1" fill="#E8B84A"/>
+    <rect x="16" width="3.5" height="16" rx="1" fill="#E8B84A"/>
+  </g>
+  <text x="88" y="42" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, 'PingFang SC', sans-serif" font-size="18">开关</text>
+  <text x="1144" y="42" text-anchor="end" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">默认安全 · 一步撤销</text>
+
+  <g id="g">
+    <rect x="56" y="72" width="532" height="248" rx="14" fill="#1C2218" stroke="#2E3828" stroke-width="1.25"/>
+    <text x="76" y="108" fill="#E8B84A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">G  自动卸载</text>
+    <text x="76" y="148" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">default</text>
+    <text x="168" y="148" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="20">dry-run — 只报告，不移动</text>
+    <text x="76" y="188" fill="#E8B84A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">--apply</text>
+    <text x="168" y="188" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="20">移到可恢复归档</text>
+    <text x="76" y="228" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="18">对象：闲置和被遮蔽的 user-tier skill。</text>
+    <text x="76" y="260" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="18">从不静默删除。可从 archive/ 取回。</text>
+    <text x="76" y="296" fill="#5C6454" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">node dist/index.js archive-idle [--apply]</text>
+  </g>
+
+  <g id="h">
+    <rect x="612" y="72" width="532" height="248" rx="14" fill="#1C2218" stroke="#2E3828" stroke-width="1.25"/>
+    <text x="632" y="108" fill="#E8B84A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">H  原生 Skills</text>
+    <text x="632" y="148" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">enable</text>
+    <text x="724" y="148" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="20">skillOverrides name-only</text>
+    <text x="632" y="188" fill="#E8B84A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">restore</text>
+    <text x="724" y="188" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="20">恢复原先 settings.json</text>
+    <text x="632" y="228" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="18">避免宿主把每个 skill 描述塞进列表。</text>
+    <text x="632" y="260" fill="#E8B84A" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="18">风险：与 Claude Code 原生 skills 抢路由。</text>
+    <text x="632" y="296" fill="#5C6454" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">native-skills enable | restore</text>
+  </g>
+</svg>

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-labelledby="title desc">
+  <title id="title">v0.2.0</title>
+  <desc id="desc">v0.2.0：Mac 接入、30 秒演示、宿主契约注入、CI 金样、可选二进制、空 suggest 文案、dry-run 自动卸载与 --apply、原生 Skills 旁路与一键恢复。</desc>
+  <rect width="1200" height="300" rx="26" fill="#121610"/>
+
+  <g id="cap-tally" transform="translate(56 28)">
+    <rect width="3.5" height="16" rx="1" fill="#E8B84A"/>
+    <rect x="8" width="3.5" height="16" rx="1" fill="#E8B84A"/>
+    <rect x="16" width="3.5" height="16" rx="1" fill="#E8B84A"/>
+  </g>
+  <text x="88" y="42" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">RELEASE</text>
+  <text x="1144" y="42" text-anchor="end" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">v0.2.0</text>
+
+  <text x="56" y="88" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="32" font-weight="700">这一版落地</text>
+
+  <text x="56" y="136" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">A</text>
+  <text x="88" y="136" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">Mac / 本地接入，绝对路径 mcp.json</text>
+  <text x="620" y="136" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">B</text>
+  <text x="652" y="136" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">30 秒演示：太多 → 留下 3 个</text>
+
+  <text x="56" y="176" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">C</text>
+  <text x="88" y="176" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">写入宿主契约文件，不只是 resource</text>
+  <text x="620" y="176" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">D</text>
+  <text x="652" y="176" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">CI：test + tsc + eval 金样</text>
+
+  <text x="56" y="216" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">E</text>
+  <text x="88" y="216" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">可选 bun compile 二进制</text>
+  <text x="620" y="216" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">F</text>
+  <text x="652" y="216" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">空 suggest：该目录没有该 skill</text>
+
+  <text x="56" y="256" fill="#E8B84A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">G</text>
+  <text x="88" y="256" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">归档闲置：dry-run / --apply</text>
+  <text x="620" y="256" fill="#E8B84A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">H</text>
+  <text x="652" y="256" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">原生 Skills 旁路 + 一键恢复</text>
+</svg>

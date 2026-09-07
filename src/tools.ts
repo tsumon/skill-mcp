@@ -14,7 +14,7 @@ import {
 } from "./bind.js";
 import { MAX_BOUND, resolveRoots, DEFAULT_TOKEN_BUDGET } from "./config.js";
 import { runDoctor } from "./doctor.js";
-import { planArchiveIdle } from "./archive.js";
+import { applyArchiveIdle, planArchiveIdle } from "./archive.js";
 import {
   embeddingMode,
   rankEmbedded,
@@ -24,6 +24,8 @@ import {
 import { suggestSkills } from "./suggest.js";
 import { estimateTokens } from "./tokens.js";
 import { loadSkillMd } from "./ranker.js";
+import { writeHostContract } from "./host-contract.js";
+import { setNativeSkillsBypass } from "./host-skills.js";
 
 export { resetSessionBindings, setEmbeddingClient };
 
@@ -100,9 +102,14 @@ export async function handleTool(name: string, args: Record<string, unknown>, en
       }
       case "estimate_tokens": return toolEstimate(args, env);
       case "doctor": return ok(runDoctor(env));
-      case "archive_idle": return ok(planArchiveIdle(getCatalog(env), env));
+      case "archive_idle": return toolArchiveIdle(args, env);
       case "read_skill": return toolReadSkill(args, env);
       case "rescan_skills": return toolRescan(env);
+      case "write_host_contract": return ok(writeHostContract(env));
+      case "native_skills_bypass": {
+        if (typeof args.enabled !== "boolean") return err("enabled boolean is required (true to write name-only skillOverrides, false to restore)");
+        return ok(setNativeSkillsBypass(args.enabled, env));
+      }
       default: return err("Unknown tool: " + name);
     }
   } catch (e) {
@@ -255,6 +262,16 @@ function toolEstimate(args: Record<string, unknown>, env: Env): ToolResult {
     : catalog.skills.map((s) => ({ name: s.name, path: s.path, tokens: s.tokens, mode }));
   const total = list.reduce((n, s) => n + s.tokens, 0);
   return ok({ mode, skills: list, total });
+}
+
+function toolArchiveIdle(args: Record<string, unknown>, env: Env): ToolResult {
+  const catalog = getCatalog(env);
+  if (args.apply === true) {
+    const result = applyArchiveIdle(catalog, env);
+    rescanCatalog(env);
+    return ok(result);
+  }
+  return ok(planArchiveIdle(catalog, env));
 }
 
 function toolReadSkill(args: Record<string, unknown>, env: Env): ToolResult {

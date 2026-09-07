@@ -11,19 +11,25 @@ export type SuggestDropped = {
   why: "cap" | "budget" | "threshold";
 };
 
+export const EMPTY_SUGGEST_MESSAGE =
+  "This directory has no matching skill for that prompt.";
+export const EMPTY_SUGGEST_MESSAGE_ZH = "该目录下没有匹配该提示的技能。";
+
 export type SuggestResult = {
   skills: Array<RankedSkill & { description: string; tokens: number }>;
   names: string[];
   next_step: string;
   dropped: SuggestDropped[];
   none: boolean;
+  empty_message?: string;
+  empty_message_zh?: string;
   budget: { max_tokens: number; used_tokens: number };
   cap: number;
 };
 
 export function bindNextStep(names: string[]): string {
   if (names.length === 0) {
-    return "Next step: no matching skills to bind. Call list_skills or try a more specific prompt.";
+    return EMPTY_SUGGEST_MESSAGE + " Call list_skills or try a more specific prompt.";
   }
   return "Next step: call bind_skills with names " + JSON.stringify(names) + ".";
 }
@@ -66,12 +72,16 @@ export function suggestSkills(
 
   const used = keptByBudget.reduce((n, s) => n + s.tokens, 0);
   const names = keptByBudget.map((s) => s.name);
+  const none = keptByBudget.length === 0;
   return {
     skills: keptByBudget,
     names,
     next_step: bindNextStep(names),
     dropped,
-    none: keptByBudget.length === 0,
+    none,
+    ...(none
+      ? { empty_message: EMPTY_SUGGEST_MESSAGE, empty_message_zh: EMPTY_SUGGEST_MESSAGE_ZH }
+      : {}),
     budget: { max_tokens: budgetTokens, used_tokens: used },
     cap: MAX_BOUND,
   };

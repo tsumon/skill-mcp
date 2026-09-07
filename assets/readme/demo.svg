@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">30-second demo</title>
+  <desc id="desc">Install too many local skills, suggest a prompt, bind at most three names, then write a host contract that lists only those bound skills.</desc>
+  <rect width="1200" height="420" rx="26" fill="#121610"/>
+
+  <g id="cap-tally" transform="translate(56 32)">
+    <rect width="3.5" height="16" rx="1" fill="#E8B84A"/>
+    <rect x="8" width="3.5" height="16" rx="1" fill="#E8B84A"/>
+    <rect x="16" width="3.5" height="16" rx="1" fill="#E8B84A"/>
+  </g>
+  <text x="88" y="46" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">30-SECOND DEMO</text>
+  <text x="1144" y="46" text-anchor="end" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">TOO MANY → 3 → CONTRACT</text>
+
+  <text x="56" y="92" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="32" font-weight="700">Dump the pile. Keep three.</text>
+  <text x="56" y="124" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">suggest_skills returns names[] ready for bind. write_host_contract forbids the rest.</text>
+
+  <g id="step-1">
+    <rect x="56" y="156" width="252" height="220" rx="14" fill="#1C2218" stroke="#2E3828" stroke-width="1.25"/>
+    <text x="76" y="188" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">01  INSTALL MANY</text>
+    <text x="76" y="228" fill="#5C6454" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">auth-login</text>
+    <text x="76" y="256" fill="#5C6454" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">auth-oauth</text>
+    <text x="76" y="284" fill="#5C6454" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">auth-token</text>
+    <text x="76" y="312" fill="#5C6454" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">auth-session</text>
+    <text x="76" y="348" fill="#E8B84A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18">host listing overflows</text>
+  </g>
+
+  <path d="M320 266 L336 266" stroke="#5C6454" stroke-width="2"/>
+  <path d="M328 260 L336 266 L328 272" fill="none" stroke="#5C6454" stroke-width="2"/>
+
+  <g id="step-2">
+    <rect x="348" y="156" width="252" height="220" rx="14" fill="#1C2218" stroke="#C6F25A" stroke-width="1.5"/>
+    <text x="368" y="188" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">02  SUGGEST</text>
+    <text x="368" y="228" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">auth-login</text>
+    <text x="368" y="256" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">auth-oauth</text>
+    <text x="368" y="284" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">auth-token</text>
+    <text x="368" y="312" fill="#5C6454" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">auth-session  dropped</text>
+    <text x="368" y="348" fill="#C6F25A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18">hard cap 3</text>
+  </g>
+
+  <path d="M612 266 L628 266" stroke="#5C6454" stroke-width="2"/>
+  <path d="M620 260 L628 266 L620 272" fill="none" stroke="#5C6454" stroke-width="2"/>
+
+  <g id="step-3">
+    <rect x="640" y="156" width="252" height="220" rx="14" fill="#1C2218" stroke="#2E3828" stroke-width="1.25"/>
+    <text x="660" y="188" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">03  BIND</text>
+    <rect x="660" y="212" width="18" height="14" rx="3" fill="#C6F25A"/>
+    <text x="686" y="224" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">auth-login</text>
+    <rect x="660" y="240" width="18" height="14" rx="3" fill="#C6F25A"/>
+    <text x="686" y="252" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">auth-oauth</text>
+    <rect x="660" y="268" width="18" height="14" rx="3" fill="#C6F25A"/>
+    <text x="686" y="280" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">auth-token</text>
+    <rect x="660" y="296" width="18" height="14" rx="3" fill="none" stroke="#5C6454" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <text x="660" y="348" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18">names[] as-is</text>
+  </g>
+
+  <path d="M904 266 L920 266" stroke="#5C6454" stroke-width="2"/>
+  <path d="M912 260 L920 266 L912 272" fill="none" stroke="#5C6454" stroke-width="2"/>
+
+  <g id="step-4">
+    <rect x="932" y="156" width="212" height="220" rx="14" fill="#1C2218" stroke="#E8B84A" stroke-width="1.5"/>
+    <text x="952" y="188" fill="#E8B84A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">04  CONTRACT</text>
+    <text x="952" y="232" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18">only these 3</text>
+    <text x="952" y="264" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18">forbid others</text>
+    <text x="952" y="304" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">CLAUDE.md</text>
+    <text x="952" y="348" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18">Cursor rules</text>
+  </g>
+</svg>

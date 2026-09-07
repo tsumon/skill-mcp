@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
   <title id="title">skill-mcp</title>
-  <desc id="desc">本地 stdio MCP 服务：列出、建议并绑定最多 3 个本地 SKILL.md。token 预算不会提高 cap。</desc>
+  <desc id="desc">本地 stdio MCP 服务：列出、建议并绑定最多 3 个本地 SKILL.md。token 预算不会提高 cap。可写入宿主契约、dry-run 归档、原生 Skills 旁路。</desc>
 
   <rect width="1200" height="360" rx="26" fill="#121610"/>
 
@@ -11,12 +11,12 @@
   </g>
 
   <text x="88" y="54" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, 'PingFang SC', sans-serif" font-size="18">本地 STDIO MCP</text>
-  <text x="1144" y="54" text-anchor="end" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">v0.1.1 · MIT · NODE 20+</text>
+  <text x="1144" y="54" text-anchor="end" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">v0.2.0 · MIT · NODE 20+</text>
 
   <g id="title-block">
     <text x="56" y="118" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="56" font-weight="700">skill-mcp</text>
     <text x="56" y="164" fill="#E8EDE3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="22">帮 agent 挑选要用的本地 SKILL.md。</text>
-    <text x="56" y="194" fill="#C6F25A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="22">最多绑定 3 个。token 预算不会提高 cap。</text>
+    <text x="56" y="194" fill="#C6F25A" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="22">最多绑定 3 个。然后写入宿主契约。</text>
   </g>
 
   <g id="hard-limits" transform="translate(748 72)">
@@ -32,24 +32,24 @@
     <rect x="56" y="232" width="1088" height="88" rx="14" fill="#1C2218" stroke="#2E3828" stroke-width="1.25"/>
 
     <text x="80" y="268" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">01</text>
-    <text x="114" y="268" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="600">list_skills</text>
-    <text x="80" y="296" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">列出 SKILL.md</text>
+    <text x="114" y="268" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="600">suggest</text>
+    <text x="80" y="296" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">先 cap 3，再预算</text>
 
-    <text x="330" y="282" fill="#5C6454" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">→</text>
+    <text x="300" y="282" fill="#5C6454" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">→</text>
 
-    <text x="372" y="268" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">02</text>
-    <text x="406" y="268" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="600">suggest_skills</text>
-    <text x="372" y="296" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">先 cap 3，再预算</text>
+    <text x="340" y="268" fill="#C6F25A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">02</text>
+    <text x="374" y="268" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="600">bind</text>
+    <text x="340" y="296" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">精简 name/desc/path</text>
 
-    <text x="640" y="282" fill="#5C6454" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">→</text>
+    <text x="560" y="282" fill="#5C6454" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20">→</text>
 
-    <text x="682" y="268" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">03</text>
-    <text x="716" y="268" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="600">bind_skills</text>
-    <text x="682" y="296" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">精简 name/desc/path</text>
+    <text x="600" y="268" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">03</text>
+    <text x="634" y="268" fill="#E8EDE3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="600">contract</text>
+    <text x="600" y="296" fill="#8A927E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">写入 Claude / Cursor 规则</text>
 
-    <rect x="980" y="258" width="22" height="16" rx="3" fill="#C6F25A"/>
-    <rect x="1008" y="258" width="22" height="16" rx="3" fill="#C6F25A"/>
-    <rect x="1036" y="258" width="22" height="16" rx="3" fill="none" stroke="#5C6454" stroke-width="1.5" stroke-dasharray="3 3"/>
-    <text x="980" y="296" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">3 SLOTS</text>
+    <rect x="900" y="258" width="22" height="16" rx="3" fill="#C6F25A"/>
+    <rect x="928" y="258" width="22" height="16" rx="3" fill="#C6F25A"/>
+    <rect x="956" y="258" width="22" height="16" rx="3" fill="#C6F25A"/>
+    <text x="900" y="296" fill="#8A927E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">3 槽 · G 默认 dry-run</text>
   </g>
 </svg>

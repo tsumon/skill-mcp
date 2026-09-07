@@ -1,17 +1,20 @@
 {
   "name": "skill-mcp",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Local stdio MCP server to pick SKILL.md skills and keep context small",
   "type": "module",
   "bin": {
-    "skill-mcp": "./dist/index.js"
+    "skill-mcp": "./dist/index.js",
+    "skill-mcp-cli": "./dist/cli-main.js"
   },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "node --import tsx --test test/*.test.ts",
     "eval": "node --import tsx eval/run.ts",
-    "install-mcp": "node dist/install-cli.js"
+    "install-mcp": "node dist/install-cli.js",
+    "cli": "node dist/cli-main.js",
+    "pack:binary": "bash scripts/pack.sh"
   },
   "engines": {
     "node": ">=20"
@@ -34,6 +37,7 @@
     "README.md",
     "README.zh-CN.md",
     "scripts/install.sh",
+    "scripts/pack.sh",
     "assets",
     "docs/output"
   ],
